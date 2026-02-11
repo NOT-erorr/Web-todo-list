@@ -1,0 +1,286 @@
+/* src/App.css */
+
+/* 1. Reset mặc định để web không bị viền trắng thừa */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f0f2f5; /* Màu nền xám nhẹ cho dịu mắt */
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 2. Container tổng: Giữ mọi thứ ở giữa màn hình (giống tờ giấy vẽ) */
+
+.app-container {
+  display: flex;
+  width: 98vw;
+  height: 96vh;
+  gap: 20px; /* Khoảng cách giữa Sidebar và phần bên phải */
+}
+
+/* --- SIDEBAR (Cột trái) --- */
+.sidebar {
+  display: flex;
+  width: 250px; /* Chiều rộng cố định */
+  background-color: rgb(118, 146, 246);
+  border-radius: 20px; /* Bo tròn góc như hình vẽ */
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+.sidebar button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: rgb(118, 146, 246);
+  color: #000000ff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sidebar button:hover {
+  background-color: #f0f0f0;
+}
+.sidebar button:active {
+  background-color: rgb(36, 55, 225);
+} 
+.sidebar button.active {
+  background-color: #f0f0f0;
+} 
+/* --- MAIN SECTION (Phần bên phải to hơn) --- */
+.main-content {
+  flex: 1; /* Tự động chiếm hết chỗ trống còn lại */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  gap: 20px; /* Khoảng cách giữa Header và TodoGrid */
+}
+
+/* --- HEADER --- */
+.header {
+  height: 80px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between; /* Đẩy Title sang trái, Profile sang phải */
+  align-items: center;
+  padding: 0 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 50%; /* Hình tròn */
+  overflow: hidden;
+}
+.profile-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-dropdown {
+  color: #000000ff;
+  position: absolute;
+  top: 100px;
+  right: 30px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+/* --- TODO GRID (Khu vực chính to nhất) --- */
+.todogrid {
+  flex: 1; /* Chiếm hết chiều cao còn lại */
+  height: 100%;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 30px; /* Bo góc to như hình */
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  
+  /* Chia đôi nội dung bên trong: TodoItems (trái) - Note (phải) */
+  display: flex;
+  gap: 30px;
+}
+/* --- Add Bar (Thanh thêm mới) --- */
+/* --- TODO ITEMS (Cập nhật: Biến thành Flexbox dọc) --- */
+.todoitems {
+  flex: 2; 
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  padding: 20px;
+  
+  /* THÊM MỚI: Để ghim Add Bar */
+  display: flex;           /* Bật chế độ Flex */
+  flex-direction: column;  /* Xếp dọc từ trên xuống */
+  height: 100%;            /* Chiếm toàn bộ chiều cao */
+  overflow: hidden;        /* Cắt bỏ phần thừa nếu tràn khung */
+}
+
+/* --- ADD BAR (Cập nhật: Làm đẹp và cố định) --- */
+/* --- Add Bar (Thanh thêm mới) --- */
+.add-bar {
+  display: flex;            /* Xếp các phần tử nằm ngang */
+  flex-direction: row;      /* Hướng ngang (Input trái - Button phải) */
+  align-items: center;      /* QUAN TRỌNG: Căn giữa theo chiều dọc (để không bị kéo dãn) */
+  gap: 15px;                /* Khoảng cách giữa Input và Button */
+  
+  width: 100%;              /* Chiếm hết chiều ngang */
+  padding-bottom: 15px;     /* Tạo khoảng thở bên dưới */
+  border-bottom: 1px solid #e0e0e0; /* Đường gạch chân mờ */
+  margin-bottom: 15px;      /* Đẩy danh sách xuống dưới */
+  flex-shrink: 0;           /* Ghim chặt, không cho co lại khi danh sách dài */
+}
+
+/* Ô nhập liệu (Nằm bên trái) */
+.add-bar input {
+  flex: 1;                  /* Chiếm toàn bộ khoảng trống còn lại bên trái */
+  height: 45px;             /* Chiều cao cố định cho đẹp */
+  padding: 0 15px;          /* Thụt lề chữ vào trong */
+  border: 1px solid #ddd;
+  border-radius: 8px;       /* Bo tròn nhẹ */
+  font-size: 16px;
+  outline: none;
+  background-color: white;  /* Nền trắng sạch sẽ */
+  color: #333;
+}
+
+.add-bar input:focus {
+  border-color: #646cff;    /* Đổi màu viền khi bấm vào */
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2); /* Hiệu ứng phát sáng nhẹ */
+}
+
+/* Nút Add (Nằm bên phải) */
+.add-bar button {
+  width: 100px;             /* Độ rộng cố định */
+  height: 45px;             /* Chiều cao bằng với Input */
+  background-color: #2f2f2f; /* Màu đen/xám đậm như hình bạn muốn */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s; /* Hiệu ứng chuyển màu mượt */
+}
+
+.add-bar button:hover {
+  background-color: #000;    /* Đậm hơn khi di chuột vào */
+}
+/* Các phần khác của add-bar giữ nguyên */
+
+
+/* --- LIST CONTAINER (Thêm mới: Khu vực cuộn) --- */
+/* Bạn nhớ thêm class này vào thẻ div bao quanh các todo-row trong App.jsx nhé */
+.list-container {
+  flex: 1;           /* Chiếm toàn bộ khoảng trống còn lại bên dưới Add Bar */
+  overflow-y: auto;  /* Chỉ cuộn nội dung trong vùng này */
+  padding-right: 5px; /* Chừa chút lề phải để thanh cuộn không che chữ */
+  color: #000000ff;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp (Optional) */
+.list-container::-webkit-scrollbar {
+  width: 6px;
+}
+.list-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+/* --- NOTE SECTION (Cập nhật: Thêm hiệu ứng ghim) --- */
+.note-section {
+  flex: 1; 
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  padding: 20px;
+  
+  /* THÊM MỚI: Để ghim Add Bar */
+  display: flex;           /* Bật chế độ Flex */
+  flex-direction: column;  /* Xếp dọc từ trên xuống */
+  height: 100%;            /* Chiếm toàn bộ chiều cao */
+  overflow: hidden;        /* Cắt bỏ phần thừa nếu tràn khung */
+}
+
+/* --- ADD BAR (Cập nhật: Làm đẹp và cố định) --- */
+/* --- Add Bar (Thanh thêm mới) --- */
+.add-bar {
+  display: flex;            /* Xếp các phần tử nằm ngang */
+  flex-direction: row;      /* Hướng ngang (Input trái - Button phải) */
+  align-items: center;      /* QUAN TRỌNG: Căn giữa theo chiều dọc (để không bị kéo dãn) */
+  gap: 15px;                /* Khoảng cách giữa Input và Button */
+  
+  width: 100%;              /* Chiếm hết chiều ngang */
+  padding-bottom: 15px;     /* Tạo khoảng thở bên dưới */
+  border-bottom: 1px solid #e0e0e0; /* Đường gạch chân mờ */
+  margin-bottom: 15px;      /* Đẩy danh sách xuống dưới */
+  flex-shrink: 0;           /* Ghim chặt, không cho co lại khi danh sách dài */
+}
+
+/* Ô nhập liệu (Nằm bên trái) */
+.add-bar input {
+  flex: 1;                  /* Chiếm toàn bộ khoảng trống còn lại bên trái */
+  height: 45px;             /* Chiều cao cố định cho đẹp */
+  padding: 0 15px;          /* Thụt lề chữ vào trong */
+  border: 1px solid #ddd;
+  border-radius: 8px;       /* Bo tròn nhẹ */
+  font-size: 16px;
+  outline: none;
+  background-color: white;  /* Nền trắng sạch sẽ */
+  color: #333;
+}
+
+.add-bar input:focus {
+  border-color: #646cff;    /* Đổi màu viền khi bấm vào */
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2); /* Hiệu ứng phát sáng nhẹ */
+}
+
+/* Nút Add (Nằm bên phải) */
+.add-bar button {
+  width: 100px;             /* Độ rộng cố định */
+  height: 45px;             /* Chiều cao bằng với Input */
+  background-color: #2f2f2f; /* Màu đen/xám đậm như hình bạn muốn */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s; /* Hiệu ứng chuyển màu mượt */
+}
+
+.add-bar button:hover {
+  background-color: #000;    /* Đậm hơn khi di chuột vào */
+}
+/* Các phần khác của add-bar giữ nguyên */
+
+
+/* --- LIST CONTAINER (Thêm mới: Khu vực cuộn) --- */
+/* Bạn nhớ thêm class này vào thẻ div bao quanh các todo-row trong App.jsx nhé */
+.list-container {
+  flex: 1;           /* Chiếm toàn bộ khoảng trống còn lại bên dưới Add Bar */
+  overflow-y: auto;  /* Chỉ cuộn nội dung trong vùng này */
+  padding-right: 5px; /* Chừa chút lề phải để thanh cuộn không che chữ */
+  color: #000000ff;
+}
+
+/* Tùy chỉnh thanh cuộn cho đẹp (Optional) */
+.list-container::-webkit-scrollbar {
+  width: 6px;
+}
+.list-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}

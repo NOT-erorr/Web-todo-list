@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
-from models import *
-from schema import *
-
+from models.user import User
+from models.todo import Todo
+from schema.schemas import UserCreate, TodoCreate
+import bcrypt
 
 # User CRUD
 def get_user(db: Session, user_id: int):
@@ -11,10 +12,11 @@ def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
 def create_user(db: Session, user: UserCreate):
-    fake_hashed_password = user.password + "_hashed"  # Thực tế dùng bcrypt
+    hashed_password = bcrypt.hashpw(user.password.encode(), bcrypt.gensalt())
+
     db_user = User(
         username=user.username,
-        hashed_password=fake_hashed_password
+        hashed_password=hashed_password
     )
     db.add(db_user)
     db.commit()
