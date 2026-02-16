@@ -1,41 +1,32 @@
 // src/App.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css'
 import Sidebar from './Sidebar';
 import TodoGrid from './Todogrid';
 import Login from './Login';
+
 function App() {
-  
   const [isLogin, setIsLogin] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Sau này sẽ gọi API FastAPI ở đây
-    // Tạm thời giả lập đăng nhập thành công    
-    onLoginSuccess(); 
-  };
-
-  const handleGoogleLogin = () => {
-    // Xử lý login Google sau này
-    alert("Chức năng đang phát triển: Login with Google");
-    onLoginSuccess();
-  };
-  if (!isLogin) {
-    return <Login 
-      onLoginSuccess={() => setIsLogin(true)}
-    />;
-  }
-  // trạng thái active của sidebar
+  // Move ALL hooks to the top - before any conditional returns
   const [activeButton, setActiveButton] = useState("Home");
+
+  // Check if user has token on mount
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      setIsLogin(true);
+    }
+  }, []);
+
   const handleLogout = () => {
-    setActiveButton("Logout");
+    localStorage.removeItem('access_token');
+    setIsLogin(false);
   };
-  const handleProfile = () => {
-    setActiveButton("profile");
-  };
-  const handleHome = () => {
-    setActiveButton("Home");
-  };
+
+  if (!isLogin) {
+    return <Login onLoginSuccess={() => setIsLogin(true)} />;
+  }
+  
   
   return (
     <div className="app-container">

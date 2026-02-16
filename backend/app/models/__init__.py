@@ -1,10 +1,10 @@
 from .user import User
-from .todo import Todo
+from .todo_items import Todo_items
 from .database import Base, engine, get_db
 
 __all__ = [
     "User",
-    "Todo",
+    "Todo_items",
     "Base",
     "engine",
     "get_db",

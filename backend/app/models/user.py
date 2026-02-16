@@ -1,6 +1,7 @@
 from .database import Base
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
+from models.todo_items import Todo_items
 
 class User(Base):
     __tablename__ = 'users'
@@ -10,5 +11,5 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     
     # Relationship
-    todos = relationship("Todo", back_populates="owner")
+    todos = relationship("Todo_items", back_populates="owner")
 

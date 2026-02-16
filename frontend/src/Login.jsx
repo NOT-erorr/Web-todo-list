@@ -1,22 +1,41 @@
 // src/Login.jsx
 import React, { useState } from 'react';
 import './Login.css';
+import { api } from './api';
 
 const Login = ({ onLoginSuccess }) => {
   // State để chuyển đổi giữa Login và Signup
   const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Sau này sẽ gọi API FastAPI ở đây
-    // Tạm thời giả lập đăng nhập thành công
-    onLoginSuccess(); 
+    setLoading(true);
+    setError('');
+    
+    try {
+      const result = isLogin 
+        ? await api.login(username, password)
+        : await api.register(username, password);
+      
+      // Save token to localStorage
+      localStorage.setItem('access_token', result.access_token);
+      
+      // Call parent callback to update app state
+      onLoginSuccess();
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleLogin = () => {
     // Xử lý login Google sau này
     alert("Chức năng đang phát triển: Login with Google");
-    onLoginSuccess();
   };
 
   return (
@@ -29,18 +48,30 @@ const Login = ({ onLoginSuccess }) => {
           {!isLogin && (
             <div className="input-group">
               <label>Họ và tên</label>
-              <input type="text" placeholder="Nguyễn Văn A" required />
+              <input type="text" placeholder="Nguyễn Văn A" />
             </div>
           )}
 
           <div className="input-group">
-            <label>Email</label>
-            <input type="email" placeholder="name@example.com" required />
+            <label>Tên đăng nhập</label>
+            <input 
+              type="text" 
+              placeholder="username" 
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required 
+            />
           </div>
 
           <div className="input-group">
             <label>Mật khẩu</label>
-            <input type="password" placeholder="••••••••" required />
+            <input 
+              type="password" 
+              placeholder="••••••••" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required 
+            />
           </div>
 
           {/* Nếu là Đăng ký thì hiện thêm ô Nhập lại mật khẩu */}
@@ -51,8 +82,20 @@ const Login = ({ onLoginSuccess }) => {
             </div>
           )}
 
-          <button type="submit" className="btn-primary">
-            {isLogin ? "Đăng nhập" : "Đăng ký"}
+          {/* Error message */}
+          {error && (
+            <div style={{
+              color: '#ff4d4d',
+              fontSize: '14px',
+              marginBottom: '10px',
+              textAlign: 'center'
+            }}>
+              {error}
+            </div>
+          )}
+
+          <button type="submit" className="btn-primary" disabled={loading}>
+            {loading ? 'Đang xử lý...' : (isLogin ? "Đăng nhập" : "Đăng ký")}
           </button>
         </form>
 
@@ -72,7 +115,12 @@ const Login = ({ onLoginSuccess }) => {
 
         <div className="toggle-link">
           {isLogin ? "Chưa có tài khoản? " : "Đã có tài khoản? "}
-          <span onClick={() => setIsLogin(!isLogin)}>
+          <span onClick={() => {
+            setIsLogin(!isLogin);
+            setError('');
+            setUsername('');
+            setPassword('');
+          }}>
             {isLogin ? "Đăng ký ngay" : "Đăng nhập ngay"}
           </span>
         </div>
